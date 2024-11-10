@@ -5,7 +5,13 @@
   - [Queue](#queue)
   - [Stack](#stack)
   - [Sorting](#sorting)
-  - [Convert from primitive arrays to Lists](#convert-from-primitive-arrays-to-lists)
+    - [Arrays.sort()](#arrayssort)
+    - [Collections.sort()](#collectionssort)
+  - [List / Array Conversions](#list--array-conversions)
+    - [int\[\] -\> List\<Intege\\r\>](#int---listinteger)
+    - [List\<Integer\> -\> int\[\]](#listinteger---int)
+    - [2d List to int\[\]\[\]](#2d-list-to-int)
+  - [ImmutableMap](#immutablemap)
 
 
 ## PriorityQueue
@@ -18,6 +24,7 @@ PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> b - a);
 
 pq.add(1);
 pq.poll();
+pq.remove(); // <- This will throw an exc if empty
 pq.size();
 ```
 
@@ -42,27 +49,79 @@ stack.removeLast();
 ```
 
 ## Sorting
+### Arrays.sort()
 ```java
 // Sorting a primitive array
 int[] arr = new int[]{3, 5, 1, 6, 2};
 
 Array.sort(arr);
 
-// Sort in reverse order
-// We need to first convert to a List
+// In order to do more complex sorting operations, we must convert the array to a List
+// and use Collections.sort() 
 
-List<Integer> sorted = Arrays.stream(arr).boxed().collect(Collectors.toList());
+List<Integer> list = Arrays.stream(arr).boxed().toList();
 
-Collections.sort(sorted, Collections.reverseOrder());
+// See below for Collections.sort();
 ```
 
-## Convert from primitive arrays to Lists
+### Collections.sort()
 ```java
-// Integer
-int[] arr1 = new int[]{1,2,3,4,5};
-List<Integer> list1 = Arrays.stream(arr1).mapToObj(Integer::valueOf).collect(Collectors.toList());
-List<Integer> list2 = Arrays.stream(arr1).boxed().toList();
+/**
+ * For Java Lists, Collections.sort() must be used. This actually gives us more options on how
+ * to sort our array.
+ * */
 
-List<Integer> list3 = new ArrayList<>();
-int[] arr2 = list3.stream().mapToInt(Integer::intValue).toArray();
+List<Integer> list = new ArrayList<>();
+Collections.sort(list);
+
+// Sort in reverse order
+
+List<Integer> list = new ArrayList<>();
+Collections.sort(list, Collections.reverseOrder());
+ 
+```
+
+## List / Array Conversions
+> For integer arrays in particular, there is a trick, since we need to convert from int Integer and vice versa.
+> 
+> Use Integer::intValue to covert from Integer to int
+> 
+> Use Integer::valueOf to convert from int to Integer
+> Alternatively use .boxed()
+
+### int[] -> List\<Integer\>
+```java
+int[] arr = new int[]{};
+
+List<Integer> list = Arrays.stream(arr).boxed().toList();
+List<Integer> list = Arrays.stream(arr).mapToObj(Integer::valueOf).toList();
+```
+
+### List\<Integer\> -> int[]
+```java
+List<Integer> list = new ArrayList<>();
+
+int[] arr = list.stream().mapToInt(Integer::intValue).toArray();
+```
+
+### 2d List to int[][]
+```java
+// List<List<Integer>>
+List<List<Integer>> list2d = new ArrayList<>();
+int[][] arr2d = list2d.stream().map(r -> r.stream().mapToInt(Integer::valueOf).toArray()).toArray(int[][]::new);
+
+List<int[]> list2d2 = new ArrayList<>();
+int[][] arr2d2 = list2d2.stream().toArray(int[][]::new);
+```
+
+
+
+## ImmutableMap
+```java
+import com.google.common.collect.*;
+
+Map<Character, Character> myMap = ImmutableMap.of(
+    'c', 'c',
+    'p', 'p'
+);
 ```
