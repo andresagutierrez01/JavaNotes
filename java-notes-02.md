@@ -2,13 +2,14 @@
 
 - [Java Notes](#java-notes)
   - [PriorityQueue](#priorityqueue)
+  - [TreeMap](#treemap)
   - [Queue](#queue)
   - [Stack](#stack)
   - [Sorting](#sorting)
     - [Arrays.sort()](#arrayssort)
     - [Collections.sort()](#collectionssort)
   - [List / Array Conversions](#list--array-conversions)
-    - [int\[\] -\> List\<Intege\\r\>](#int---listinteger)
+    - [int\[\] -\> List\<Integer\>](#int---listinteger)
     - [List\<Integer\> -\> int\[\]](#listinteger---int)
     - [2d List to int\[\]\[\]](#2d-list-to-int)
   - [ImmutableMap](#immutablemap)
@@ -20,7 +21,7 @@ PriorityQueue<Integer> pq = new PriorityQueue<>(); // ascending (default)
 
 PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> a - b); // ascending
 
-PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> b - a);
+PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> b - a); // descending
 
 pq.add(1);
 pq.poll();
@@ -28,15 +29,25 @@ pq.remove(); // <- This will throw an exc if empty
 pq.size();
 ```
 
+## TreeMap
+```java
+TreeMap<Integer, Integer> treeMap = new TreeMap<>();
+
+treeMap.pollFirstEntry(); // polls
+treeMap.firstEntry(); // retrieves but does not remove
+
+// With a Comparator function (descending)
+TreeMap<Integer, Integer> treeMap = new TreeMap<>((a, b) -> b - a);
+```
+
 ## Queue
 ```java
 Deque<Integer> q = new ArrayDeque<>();
 
 q.addLast();
-
 q.peekFirst();
-
-q.removeFirst();
+q.pollFirst();
+q.removeFirst(); // Throws an exception if empty
 ```
 
 ## Stack
@@ -45,7 +56,8 @@ Deque<Integer> stack = new ArrayDeque<>();
 
 stack.addLast();
 stack.peekLast();
-stack.removeLast();
+stack.pollLast();
+stack.removeLast(); // Throws an exception if empty
 ```
 
 ## Sorting
@@ -55,6 +67,11 @@ stack.removeLast();
 int[] arr = new int[]{3, 5, 1, 6, 2};
 
 Array.sort(arr);
+
+// For 2d arrays, you can pass a comparator function to Arrays.sort()
+int[][] arr2 = new int[5][2];
+
+Arrays.sort(arr2, (a, b) -> a[0] - b[0]);
 
 // In order to do more complex sorting operations, we must convert the array to a List
 // and use Collections.sort() 
@@ -113,8 +130,6 @@ int[][] arr2d = list2d.stream().map(r -> r.stream().mapToInt(Integer::valueOf).t
 List<int[]> list2d2 = new ArrayList<>();
 int[][] arr2d2 = list2d2.stream().toArray(int[][]::new);
 ```
-
-
 
 ## ImmutableMap
 ```java
